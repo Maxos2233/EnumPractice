@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleApp8
+﻿namespace ConsoleApp8
 {
     public class Allergies
     {
@@ -22,95 +16,39 @@ namespace ConsoleApp8
         }
 
         public string Name { get; private set; }
+        
         public int Score { get; private set; }
-        public string allergen { get; private set; }
+
+
         public Allergies(string name)
         {
             Name = name;
         }
 
-        public Allergies(string name, int score)
+        public Allergies(string name, int score) : this(name)
         {
-            Name = name;
             Score = score;
         }
 
-        public Allergies(string name, string allergenName)
+        public Allergies(string name, string allergies) : this(name)
         {
-            Name = name;
-            allergen = allergenName;
+            var allergens = Enum.GetValues<Allergen>();
+            foreach (var allergy in allergies.Split(" "))
+            {
+                foreach (var allergen in allergens)
+                {
+                    if (allergen.ToString() == allergy)
+                    {
+                        Score += (int)allergen;
+                    }
+                }
+                
+            }
         }
 
         public override string ToString()
         {
-            if (Score == 0 && allergen == null)
-            {
-                return $"{Name} has no allergies";
-            }
-            if (Score > 1)
-            {
-                return $"{Name} is allergic to {(Allergen)Score}";
-            }
-            if (allergen != null)
-            {
-                return $"{Name} is allergic to {stringToAllergen()}";
-            }
-            else
-            {
-                return "";
-            }
+            return Score == 0 ? $"{Name} has no allergies" : $"{Name} is allergic to {(Allergen)Score}";
         }
-
-        public Allergen stringToAllergen()
-        {
-            Allergen score = 0;
-            string[] words = allergen.Split(' ');
-            foreach (string s in words)
-            {
-                if (s == "Eggs")
-                {
-                    score += 1;
-                }
-
-                if (s == "Peanuts")
-                {
-                    score += 2;
-                }
-
-                if (s == "Shellfish")
-                {
-                    score += 4;
-                }
-
-                if (s == "Strawberries")
-                {
-                    score += 8;
-                }
-
-                if (s == "Tomatoes")
-                {
-                    score += 16;
-                }
-
-                if (s == "Chocolate")
-                {
-                    score += 32;
-                }
-
-                if (s == "Pollen")
-                {
-                    score += 64;
-                }
-
-                if (s == "Cats")
-                {
-                    score += 128;
-                }
-            }
-            return score;
-        }
-
-
-
     }
 }
